@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: monitoringtool
+
+  data:
+    mongodb:
+      uri: mongodb://root:password@localhost:27017
+      database: monitoringtool
