@@ -1,15 +1,14 @@
-package com.dc.monitoringtool.architecture.db.model;
+package com.dc.monitoringtool.adapter.persistence;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
 import java.util.UUID;
 
 @Data
 @Document(collection = "monitoringJobs")
-public class MonitoringJob {
+class MonitoringJob {
 
     @Id
     private String id;
