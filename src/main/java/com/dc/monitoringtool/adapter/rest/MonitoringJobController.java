@@ -1,6 +1,6 @@
 package com.dc.monitoringtool.adapter.rest;
 
-import com.dc.monitoringtool.domain.MonitoringJobService;
+import com.dc.monitoringtool.application.MonitoringJobOrchestrator;
 import com.dc.monitoringtool.domain.model.MonitoringJob;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,18 +15,23 @@ import java.util.UUID;
 @RestController
 public class MonitoringJobController {
 
-    private final MonitoringJobService monitoringJobService;
+    private final MonitoringJobOrchestrator monitoringJobOrchestrator;
 
-    // add a new monitoring job
     @PostMapping("/jobs")
     public ResponseEntity<MonitoringJob> addJob(@RequestBody MonitoringJob job) {
-        return ResponseEntity.ok(monitoringJobService.addJob(job));
+        return ResponseEntity.ok(monitoringJobOrchestrator.addJob(job));
     }
 
-    //trigger a job
+    //delete job
+    @PostMapping("/jobs/{id}/delete")
+    public ResponseEntity<String> deleteJob(@PathVariable UUID id) {
+        monitoringJobOrchestrator.deleteJob(id);
+        return ResponseEntity.ok("Job deleted");
+    }
+
     @PostMapping("/jobs/{id}/trigger")
     public ResponseEntity<String> triggerJob(@PathVariable UUID id) {
-        monitoringJobService.triggerJob(id);
+        monitoringJobOrchestrator.triggerJob(id);
         return ResponseEntity.ok("Job triggered");
     }
 

@@ -1,11 +1,54 @@
 spring:
   application:
     name: monitoringtool
-
   data:
     mongodb:
       uri: mongodb://root:password@localhost:27017
       database: monitoringtool
+  dataSource:
+    url: jdbc:postgresql://localhost:5432/monitoringtool
+    username: user
+    password: password
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
   quartz:
-    job-store-type: memory
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
+    properties:
+      org:
+        quartz:
+          threadPool:
+            threadCount: 10
+          dataSource:
+            monitoringtool:
+              provider: hikari
+              driver: org.postgresql.Driver
+              URL: jdbc:postgresql://localhost:5432/monitoringtool
+              user: user
+              password: password
+          jobStore:
+            class: org.quartz.impl.jdbcjobstore.JobStoreTX
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            tablePrefix: QRTZ_
+            dataSource: monitoringtool
 
+
+# Configurations for Spring Boot Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    quartz:
+      enabled: true
+  metrics:
+    export:
+      enabled: true
+  web:
+    base-path: /actuator

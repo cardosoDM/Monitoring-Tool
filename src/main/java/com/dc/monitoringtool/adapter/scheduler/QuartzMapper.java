@@ -6,7 +6,7 @@ import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class QuartzMapper {
+class QuartzMapper {
 
     public static final String URL = "url";
     public static final String REPEAT_COUNT = "repeatCount";
@@ -15,7 +15,7 @@ public class QuartzMapper {
 
     public static JobDetail fromMonitoringJobToJobDetail(MonitoringJob job) {
         return JobBuilder.newJob()
-                .ofType(SampleJob.class)
+                .ofType(GenericJob.class)
                 .storeDurably()
                 .withIdentity(job.id().toString())
                 .usingJobData(URL, job.url())

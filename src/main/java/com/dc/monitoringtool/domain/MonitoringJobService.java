@@ -9,4 +9,8 @@ public interface MonitoringJobService {
     MonitoringJob addJob(MonitoringJob job);
 
     void triggerJob(UUID id);
+
+    void deleteJob(UUID id);
+
+    int getNumberOfJobs();
 }
