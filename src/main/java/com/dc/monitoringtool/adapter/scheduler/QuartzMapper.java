@@ -2,6 +2,7 @@ package com.dc.monitoringtool.adapter.scheduler;
 
 import com.dc.monitoringtool.domain.model.MonitoringJob;
 import lombok.NoArgsConstructor;
+import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
 
@@ -13,9 +14,9 @@ class QuartzMapper {
     public static final String INTERVAL_IN_MILLI_SECONDS = "intervalInMilliSeconds";
     public static final String DURATION_IN_MILLI_SECONDS = "durationInMilliSeconds";
 
-    public static JobDetail fromMonitoringJobToJobDetail(MonitoringJob job) {
+    public static JobDetail fromMonitoringJobToJobDetail(MonitoringJob job, Class<? extends Job> aClass) {
         return JobBuilder.newJob()
-                .ofType(GenericJob.class)
+                .ofType(aClass)
                 .storeDurably()
                 .withIdentity(job.id().toString())
                 .usingJobData(URL, job.url())

@@ -9,7 +9,7 @@ import org.springframework.util.StopWatch;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -19,31 +19,40 @@ class HttpGenericService implements MonitoringUrlRequestService {
 
     @Override
     public MonitoringResult request(String jobId, String url) {
+        if (jobId == null || jobId.isEmpty()) {
+            throw new IllegalArgumentException("jobId cannot be null or empty");
+        }
+
+        if (url == null || url.isEmpty()) {
+            throw new IllegalArgumentException("url cannot be null or empty");
+        }
+
+        var status = MonitoringResult.SUCCESS;
+        String error = "";
 
         StopWatch watch = new StopWatch();
-        var status = MonitoringResult.SUCCESS;
-        String error = null;
+
         try {
-            watch.start();
-            restTemplate.getForObject(url, String.class);
+            executeRequest(url, watch);
         } catch (Exception e) {
             status = MonitoringResult.FAILURE;
             error = e.getMessage();
-        } finally {
-            watch.stop();
         }
-        long totalTimeMillis = watch.getTotalTimeMillis();
-
-        HashMap<String, String> metadata = new HashMap<>();
-        metadata.put("jobId", jobId);
-        metadata.put("url", url);
-        metadata.put("error", error);
 
         return MonitoringResult.builder()
                 .timestamp(LocalDateTime.now())
                 .status(status)
-                .responseTime(totalTimeMillis)
-                .metadata(metadata)
+                .responseTime(watch.getTotalTimeMillis())
+                .metadata(Map.of("jobId", jobId, "url", url, "error", error))
                 .build();
+    }
+
+    private void executeRequest(String url, StopWatch watch) {
+        try {
+            watch.start();
+            restTemplate.getForObject(url, String.class);
+        } finally {
+            watch.stop();
+        }
     }
 }

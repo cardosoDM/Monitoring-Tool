@@ -16,6 +16,8 @@ class QuartzService implements MonitoringJobService {
 
     private final Scheduler scheduler;
 
+    private final Job genericJob;
+
     @Override
     public MonitoringJob addJob(MonitoringJob job) {
         try {
@@ -24,7 +26,7 @@ class QuartzService implements MonitoringJobService {
                     .id(uuid)
                     .build();
 
-            var jobDetail = QuartzMapper.fromMonitoringJobToJobDetail(newJob);
+            var jobDetail = QuartzMapper.fromMonitoringJobToJobDetail(newJob, genericJob.getClass());
 
             scheduler.addJob(jobDetail, false);
             return newJob;

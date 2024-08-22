@@ -27,6 +27,7 @@ class MonitorResultEntityMapper {
         }
 
         return MonitoringResultEntity.builder()
+                .id(domain.id())
                 .timestamp(domain.timestamp())
                 .metadata(domain.metadata())
                 .status(domain.status())
