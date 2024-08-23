@@ -5,7 +5,4 @@ public class MonitoringNotFoundException extends RuntimeException {
         super(message);
     }
 
-    public MonitoringNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

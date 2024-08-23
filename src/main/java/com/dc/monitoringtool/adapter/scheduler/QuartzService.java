@@ -95,6 +95,17 @@ class QuartzService implements MonitoringJobService {
         return QuartzMapper.fromJobDetailToMonitoringJob(jobDetail);
     }
 
+    @Override
+    public MonitoringJob updateJob(UUID id, MonitoringJob job) {
+        try {
+            var jobDetail = QuartzMapper.fromMonitoringJobToJobDetail(job, genericJob.getClass());
+            scheduler.addJob(jobDetail, true);
+            return job;
+        } catch (SchedulerException e) {
+            throw new MonitoringException("Error when updating Job", e);
+        }
+    }
+
     private JobDetail getJobDetails(UUID id) {
         try {
             JobKey jobKey = JobKey.jobKey(id.toString());

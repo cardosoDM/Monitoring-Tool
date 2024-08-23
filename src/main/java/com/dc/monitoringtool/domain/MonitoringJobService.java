@@ -16,4 +16,6 @@ public interface MonitoringJobService {
     int getNumberOfJobs();
 
     MonitoringJob getJob(UUID id);
+
+    MonitoringJob updateJob(UUID id, MonitoringJob job);
 }

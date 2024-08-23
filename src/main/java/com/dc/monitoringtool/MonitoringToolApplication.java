@@ -7,6 +7,7 @@ import org.springframework.retry.annotation.EnableRetry;
 @SpringBootApplication
 @EnableRetry
 public class MonitoringToolApplication {
+    //todo improve test names
 
     public static void main(String[] args) {
         SpringApplication.run(MonitoringToolApplication.class, args);

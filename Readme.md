@@ -64,7 +64,6 @@ or for build folder:
 docker-compose -f build/docker-compose.yaml down
 ```
 
-
 ### Running Tests
 To run unit and integration tests:
 ```sh
@@ -76,21 +75,6 @@ To check the coverage of the tests:
 mvn jacoco:report
 ```
 and open the file `target/site/jacoco/index.html` in a browser.
-
-
-
-## Configuration
-
-### Application Properties
-The application can be configured using the `application.properties` file located in the `src/main/resources` directory.
-
-### Database Configuration
-The application uses PostgresSQL and MongoDB. The database configurations are managed using Testcontainers in the `AbstractContainerBase` class.
-
-## Project Structure
-- `src/main/java`: Contains the main application code.
-- `src/test/java`: Contains unit and integration tests.
-- `src/main/resources`: Contains application configuration files.
 
 ## Usage
 ### API Endpoints

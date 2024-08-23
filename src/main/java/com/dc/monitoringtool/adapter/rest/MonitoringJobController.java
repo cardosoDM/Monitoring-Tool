@@ -19,10 +19,14 @@ public class MonitoringJobController {
         return ResponseEntity.ok(monitoringJobService.addJob(job));
     }
 
-    //get MonitoringJob method
     @GetMapping("/jobs/{id}")
     public ResponseEntity<MonitoringJob> getJob(@PathVariable UUID id) {
         return ResponseEntity.ok(monitoringJobService.getJob(id));
+    }
+
+    @PutMapping("/jobs/{id}")
+    public ResponseEntity<MonitoringJob> updateJob(@PathVariable UUID id, @RequestBody MonitoringJob job) {
+        return ResponseEntity.ok(monitoringJobService.updateJob(id, job));
     }
 
     @PostMapping("/jobs/{id}/delete")
