@@ -1,6 +1,7 @@
 package com.dc.monitoringtool.adapter.scheduler;
 
 import com.dc.monitoringtool.application.MonitoringJobOrchestrator;
+import com.dc.monitoringtool.domain.model.HttpRequestConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +11,8 @@ import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
+
+import java.util.Collections;
 
 import static org.mockito.Mockito.*;
 
@@ -35,25 +38,26 @@ class GenericJobTest {
     @Test
     void execute_successful() {
         JobDataMap jobDataMap = new JobDataMap();
-        String url = "https://example.com";
-        jobDataMap.put("url", url);
+        HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://example.com", "GET", Collections.emptyMap(), null);
+        jobDataMap.put("httpRequestConfig", httpRequestConfig);
         when(jobExecutionContext.getJobDetail()).thenReturn(jobDetail);
         when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
         when(jobDetail.getKey()).thenReturn(JobKey.jobKey("testJob"));
 
         genericJob.execute(jobExecutionContext);
 
-        verify(monitoringJobOrchestrator, times(1)).execute("testJob", url);
+        verify(monitoringJobOrchestrator, times(1)).execute("testJob", httpRequestConfig);
     }
 
     @Test
     void execute_exceptionThrown() {
         JobDataMap jobDataMap = new JobDataMap();
-        jobDataMap.put("url", "http://example.com");
+        HttpRequestConfig httpRequestConfig = new HttpRequestConfig("http://example.com", "GET", Collections.emptyMap(), null);
+        jobDataMap.put("httpRequestConfig", httpRequestConfig);
         when(jobExecutionContext.getJobDetail()).thenReturn(jobDetail);
         when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);
         when(jobDetail.getKey()).thenReturn(JobKey.jobKey("testJob"));
-        doThrow(new RuntimeException("Execution failed")).when(monitoringJobOrchestrator).execute(anyString(), anyString());
+        doThrow(new RuntimeException("Execution failed")).when(monitoringJobOrchestrator).execute(anyString(), any(HttpRequestConfig.class));
 
         try {
             genericJob.execute(jobExecutionContext);
@@ -61,6 +65,6 @@ class GenericJobTest {
             // Exception is expected
         }
 
-        verify(monitoringJobOrchestrator, times(1)).execute("testJob", "http://example.com");
+        verify(monitoringJobOrchestrator, times(1)).execute("testJob", httpRequestConfig);
     }
 }

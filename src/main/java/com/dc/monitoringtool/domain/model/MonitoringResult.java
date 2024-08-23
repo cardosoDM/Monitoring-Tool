@@ -8,7 +8,7 @@ import java.util.Map;
 @Builder
 public record MonitoringResult(String id,
                                LocalDateTime timestamp,
-                               Map<String, String> metadata,
+                               Map<String, Object> metadata,
                                String status,
                                long responseTime) {
 

@@ -20,7 +20,7 @@ class MonitoringResultEntity {
 
     private LocalDateTime timestamp;
 
-    private Map<String, String> metadata;
+    private Map<String, Object> metadata;
 
     private String status;
 

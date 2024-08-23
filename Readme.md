@@ -32,10 +32,38 @@ mvn clean install
 ```
 
 ### Run the Application
+First, you need to run the docker-compose file to start the databases
+```sh
+docker-compose up
+```
+Then, you can run the application using the Spring Boot Maven plugin:
 ```sh
 mvn spring-boot:run
 ```
 The application will start on port 8080.
+
+### Run the Application with Docker
+Build the Docker image:
+```sh
+docker build -t monitoring-tool .
+```
+
+Then run the image with docker-compose in the build folder:
+```sh
+docker-compose -f build/docker-compose.yaml  up 
+```
+
+The application will start on port 8080.
+
+Stop the application using:
+```sh
+docker-compose down
+```
+or for build folder:
+```sh
+docker-compose -f build/docker-compose.yaml down
+```
+
 
 ### Running Tests
 To run unit and integration tests:
@@ -43,21 +71,13 @@ To run unit and integration tests:
 mvn test
 ```
 
-### Running Docker Compose
-To start the required services using Docker Compose:
+To check the coverage of the tests:
 ```sh
-docker-compose up -d
+mvn jacoco:report
 ```
+and open the file `target/site/jacoco/index.html` in a browser.
 
-### Run the Application with Docker
-Build the Docker image:
-```sh
-docker build -t monitoring-tool .
-```
-Run the Docker container:
-```sh
-docker run -p 8080:8080 monitoring-tool
-```
+
 
 ## Configuration
 

@@ -2,6 +2,7 @@ package com.dc.monitoringtool.adapter.scheduler;
 
 import com.dc.monitoringtool.AbstractContainerBase;
 import com.dc.monitoringtool.domain.MonitoringJobService;
+import com.dc.monitoringtool.domain.model.HttpRequestConfig;
 import com.dc.monitoringtool.domain.model.MonitoringJob;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Collections;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -48,7 +50,8 @@ class QuartzIntegrationTest extends AbstractContainerBase {
 
     @Test
     void addJob_triggerJob_successful() throws InterruptedException {
-        MonitoringJob job = new MonitoringJob(UUID.randomUUID(), "https://example.com", 1000, 60000, 5);
+        HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://example.com", "GET", Collections.emptyMap(), null);
+        MonitoringJob job = new MonitoringJob(UUID.randomUUID(), httpRequestConfig, 1000, 5, 60000);
         MonitoringJob monitoringJob = monitoringJobService.addJob(job);
 
         monitoringJobService.triggerJob(monitoringJob.id());

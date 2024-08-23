@@ -1,6 +1,7 @@
 package com.dc.monitoringtool.adapter.rest;
 
 import com.dc.monitoringtool.domain.MonitoringJobService;
+import com.dc.monitoringtool.domain.model.HttpRequestConfig;
 import com.dc.monitoringtool.domain.model.MonitoringJob;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -38,9 +40,10 @@ class MonitoringJobControllerTest {
 
     @Test
     void addJob_successful() throws Exception {
+        HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://test.com", "GET", Collections.emptyMap(), null);
         final MonitoringJob monitoringJob = MonitoringJob.builder()
                 .id(jobId)
-                .url("https://test.com")
+                .httpRequestConfig(httpRequestConfig)
                 .durationInMilliSeconds(1000)
                 .repeatCount(5)
                 .intervalInMilliSeconds(1000)
@@ -52,7 +55,7 @@ class MonitoringJobControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\": \"Test Job\"}"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"id\":\"" + jobId + "\",\"url\":\"https://test.com\",\"durationInMilliSeconds\":1000,\"repeatCount\":5,\"intervalInMilliSeconds\":1000}"));
+                .andExpect(content().json("{\"id\":\"" + jobId + "\",\"httpRequestConfig\":{\"url\":\"https://test.com\",\"method\":\"GET\",\"headers\":{}},\"durationInMilliSeconds\":1000,\"repeatCount\":5,\"intervalInMilliSeconds\":1000}"));
     }
 
     @Test

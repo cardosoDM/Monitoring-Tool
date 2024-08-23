@@ -16,10 +16,11 @@ import java.util.UUID;
  */
 @Builder(toBuilder = true)
 public record MonitoringJob(UUID id,
-                            String url,
+                            HttpRequestConfig httpRequestConfig,
                             int intervalInMilliSeconds,
-                            int repeatCount,
-                            int durationInMilliSeconds) {
+                            int durationInMilliSeconds,
+                            int repeatCount
+) {
 
 
 }
