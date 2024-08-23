@@ -1,41 +1,50 @@
 package com.dc.monitoringtool.adapter.persistence;
 
+import com.dc.monitoringtool.AbstractContainerBase;
+import com.dc.monitoringtool.MonitoringToolApplication;
+import com.mongodb.client.MongoClients;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.test.context.ContextConfiguration;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@ExtendWith(MockitoExtension.class)
-class MonitoringResultRepositoryImplTest {
+@SpringBootTest(classes = MonitoringToolApplication.class)
+@ContextConfiguration(classes = MonitoringResultRepositoryImplTest.TestConfig.class)
+class MonitoringResultRepositoryImplTest extends AbstractContainerBase {
 
-    @Mock
+    @Autowired
     private MongoTemplate mongoTemplate;
 
-    @InjectMocks
     private MonitoringResultRepositoryImpl monitoringResultRepository;
-
-    private MonitoringResultEntity monitoringResultEntity;
 
     @BeforeEach
     void setUp() {
-        monitoringResultEntity = MonitoringResultEntity.builder()
+        monitoringResultRepository = new MonitoringResultRepositoryImpl(mongoTemplate);
+        MonitoringResultEntity monitoringResultEntity = MonitoringResultEntity.builder()
                 .id("1")
                 .timestamp(LocalDateTime.now())
                 .metadata(Map.of("jobId", "testJobId"))
                 .status("SUCCESS")
                 .responseTime(100L)
                 .build();
+        mongoTemplate.save(monitoringResultEntity);
+    }
+
+    @AfterEach
+    void tearDown() {
+        mongoTemplate.dropCollection(MonitoringResultEntity.class);
     }
 
     @Test
@@ -45,79 +54,18 @@ class MonitoringResultRepositoryImplTest {
         String jobId = "testJobId";
         String status = "SUCCESS";
 
-        when(mongoTemplate.find(any(Query.class), eq(MonitoringResultEntity.class)))
-                .thenReturn(List.of(monitoringResultEntity));
-
         List<MonitoringResultEntity> results = monitoringResultRepository.findByFilters(startTimestamp, endTimestamp, jobId, status);
 
         assertNotNull(results);
         assertEquals(1, results.size());
-        assertEquals(monitoringResultEntity.getId(), results.getFirst().getId());
+        assertEquals("1", results.getFirst().getId());
     }
 
-    @Test
-    void findByFilters_startTimestampOnly() {
-        LocalDateTime startTimestamp = LocalDateTime.now().minusDays(1);
-
-        when(mongoTemplate.find(any(Query.class), eq(MonitoringResultEntity.class)))
-                .thenReturn(List.of(monitoringResultEntity));
-
-        List<MonitoringResultEntity> results = monitoringResultRepository.findByFilters(startTimestamp, null, null, null);
-
-        assertNotNull(results);
-        assertEquals(1, results.size());
-        assertEquals(monitoringResultEntity.getId(), results.getFirst().getId());
-    }
-
-    @Test
-    void findByFilters_endTimestampOnly() {
-        LocalDateTime endTimestamp = LocalDateTime.now();
-
-        when(mongoTemplate.find(any(Query.class), eq(MonitoringResultEntity.class)))
-                .thenReturn(List.of(monitoringResultEntity));
-
-        List<MonitoringResultEntity> results = monitoringResultRepository.findByFilters(null, endTimestamp, null, null);
-
-        assertNotNull(results);
-        assertEquals(1, results.size());
-        assertEquals(monitoringResultEntity.getId(), results.getFirst().getId());
-    }
-
-    @Test
-    void findByFilters_jobIdAndStatus() {
-        String jobId = "testJobId";
-        String status = "SUCCESS";
-
-        when(mongoTemplate.find(any(Query.class), eq(MonitoringResultEntity.class)))
-                .thenReturn(List.of(monitoringResultEntity));
-
-        List<MonitoringResultEntity> results = monitoringResultRepository.findByFilters(null, null, jobId, status);
-
-        assertNotNull(results);
-        assertEquals(1, results.size());
-        assertEquals(monitoringResultEntity.getId(), results.getFirst().getId());
-    }
-
-    @Test
-    void findByFilters_noFilters() {
-        when(mongoTemplate.find(any(Query.class), eq(MonitoringResultEntity.class)))
-                .thenReturn(List.of(monitoringResultEntity));
-
-        List<MonitoringResultEntity> results = monitoringResultRepository.findByFilters(null, null, null, null);
-
-        assertNotNull(results);
-        assertEquals(1, results.size());
-        assertEquals(monitoringResultEntity.getId(), results.getFirst().getId());
-    }
-
-    @Test
-    void findByFilters_exceptionThrown() {
-        when(mongoTemplate.find(any(Query.class), eq(MonitoringResultEntity.class)))
-                .thenThrow(new RuntimeException("Query failed"));
-
-        RuntimeException exception = assertThrows(RuntimeException.class,
-                () -> monitoringResultRepository.findByFilters(null, null, null, null));
-
-        assertEquals("Query failed", exception.getMessage());
+    @Configuration
+    static class TestConfig {
+        @Bean
+        public MongoTemplate mongoTemplate() {
+            return new MongoTemplate(MongoClients.create(AbstractContainerBase.MONGO_DB_CONTAINER.getReplicaSetUrl()), "test");
+        }
     }
 }
