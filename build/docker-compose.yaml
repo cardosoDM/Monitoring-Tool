@@ -1,0 +1,51 @@
+services:
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=user
+      - POSTGRES_DB=monitoringtool
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - ../src/main/resources/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  monitoringtool:
+    build: ..
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mongodb:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/monitoringtool
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATA_MONGODB_URI=mongodb://root:password@mongodb:27017/monitoringtool?authSource=admin
+      - SPRING_DATA_MONGODB_DATABASE=monitoringtool
+      - SPRING_QUARTZ_PROPERTIES_ORG_QUARTZ_DATASOURCE_MONITORINGTOOL_PROVIDER=hikari
+      - SPRING_QUARTZ_PROPERTIES_ORG_QUARTZ_DATASOURCE_MONITORINGTOOL_DRIVER=org.postgresql.Driver
+      - SPRING_QUARTZ_PROPERTIES_ORG_QUARTZ_DATASOURCE_MONITORINGTOOL_URL=jdbc:postgresql://postgres:5432/monitoringtool
+      - SPRING_QUARTZ_PROPERTIES_ORG_QUARTZ_DATASOURCE_MONITORINGTOOL_USER=user
+      - SPRING_QUARTZ_PROPERTIES_ORG_QUARTZ_DATASOURCE_MONITORINGTOOL_PASSWORD=password
