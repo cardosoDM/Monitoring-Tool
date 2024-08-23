@@ -27,7 +27,12 @@ public abstract class AbstractContainerBase {
         registry.add("spring.datasource.url", POSTGRES_CONTAINER::getJdbcUrl);
         registry.add("spring.datasource.username", POSTGRES_CONTAINER::getUsername);
         registry.add("spring.datasource.password", POSTGRES_CONTAINER::getPassword);
+
         registry.add("spring.quartz.properties.org.quartz.jobStore.driverDelegateClass", () -> "org.quartz.impl.jdbcjobstore.PostgreSQLDelegate");
 
+        registry.add("spring.data.mongodb.uri", () -> "mongodb://" + MONGO_DB_CONTAINER.getHost() + ":" + MONGO_DB_CONTAINER.getMappedPort(27017) + "/monitoringtool");
+
+        registry.add("spring.data.mongodb.url", MONGO_DB_CONTAINER::getReplicaSetUrl);
+        registry.add("spring.data.mongodb.database", () -> "monitoringtool");
     }
 }

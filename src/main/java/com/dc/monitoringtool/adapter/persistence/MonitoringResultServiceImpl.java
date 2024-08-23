@@ -1,6 +1,6 @@
 package com.dc.monitoringtool.adapter.persistence;
 
-import com.dc.monitoringtool.domain.MonitoringResultPersistenceService;
+import com.dc.monitoringtool.domain.MonitoringResultService;
 import com.dc.monitoringtool.domain.model.MonitoringResult;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-class MonitoringResultPersistenceServiceImpl implements MonitoringResultPersistenceService {
+class MonitoringResultServiceImpl implements MonitoringResultService {
 
     private final MonitoringResultRepository monitoringResultRepository;
 

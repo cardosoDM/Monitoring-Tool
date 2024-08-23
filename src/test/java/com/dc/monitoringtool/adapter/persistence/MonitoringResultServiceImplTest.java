@@ -18,13 +18,13 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class MonitoringResultPersistenceServiceImplTest {
+class MonitoringResultServiceImplTest {
 
     @Mock
     private MonitoringResultRepository monitoringResultRepository;
 
     @InjectMocks
-    private MonitoringResultPersistenceServiceImpl monitoringResultPersistenceService;
+    private MonitoringResultServiceImpl monitoringResultPersistenceService;
 
     private MonitoringResult monitoringResult;
     private MonitoringResultEntity monitoringResultEntity;

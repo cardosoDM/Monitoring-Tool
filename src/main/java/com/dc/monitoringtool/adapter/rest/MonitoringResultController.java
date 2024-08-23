@@ -1,6 +1,6 @@
 package com.dc.monitoringtool.adapter.rest;
 
-import com.dc.monitoringtool.application.MonitoringResultOrchestrator;
+import com.dc.monitoringtool.domain.MonitoringResultService;
 import com.dc.monitoringtool.domain.model.MonitoringResult;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 public class MonitoringResultController {
 
-    private final MonitoringResultOrchestrator monitoringResultOrchestrator;
+    private final MonitoringResultService monitoringResultService;
 
     @GetMapping("/monitoring-results")
     public ResponseEntity<List<MonitoringResult>> getMonitoringResultsByCriteria(
@@ -23,7 +23,7 @@ public class MonitoringResultController {
             @RequestParam(value = "endTimestamp") LocalDateTime endTimestamp,
             @RequestParam(value = "jobId", required = false) String jobId,
             @RequestParam(value = "status", required = false) String status) {
-        List<MonitoringResult> results = monitoringResultOrchestrator.getFilteredResults(startTimestamp, endTimestamp, jobId, status);
+        List<MonitoringResult> results = monitoringResultService.getFilteredResults(startTimestamp, endTimestamp, jobId, status);
         return ResponseEntity.ok(results);
     }
 }

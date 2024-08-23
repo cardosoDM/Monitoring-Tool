@@ -1,6 +1,6 @@
 package com.dc.monitoringtool.adapter.rest;
 
-import com.dc.monitoringtool.application.MonitoringJobOrchestrator;
+import com.dc.monitoringtool.domain.MonitoringJobService;
 import com.dc.monitoringtool.domain.model.MonitoringJob;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ class MonitoringJobControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private MonitoringJobOrchestrator monitoringJobOrchestrator;
+    private MonitoringJobService monitoringJobService;
 
     private UUID jobId;
 
@@ -46,7 +46,7 @@ class MonitoringJobControllerTest {
                 .intervalInMilliSeconds(1000)
                 .build();
 
-        when(monitoringJobOrchestrator.addJob(any(MonitoringJob.class))).thenReturn(monitoringJob);
+        when(monitoringJobService.addJob(any(MonitoringJob.class))).thenReturn(monitoringJob);
 
         mockMvc.perform(post("/jobs")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -57,7 +57,7 @@ class MonitoringJobControllerTest {
 
     @Test
     void deleteJob_successful() throws Exception {
-        doNothing().when(monitoringJobOrchestrator).deleteJob(any(UUID.class));
+        doNothing().when(monitoringJobService).deleteJob(any(UUID.class));
 
         mockMvc.perform(post("/jobs/" + jobId + "/delete"))
                 .andExpect(status().isOk())
@@ -66,7 +66,7 @@ class MonitoringJobControllerTest {
 
     @Test
     void triggerJob_successful() throws Exception {
-        doNothing().when(monitoringJobOrchestrator).triggerJob(any(UUID.class));
+        doNothing().when(monitoringJobService).triggerJob(any(UUID.class));
 
         mockMvc.perform(post("/jobs/" + jobId + "/trigger"))
                 .andExpect(status().isOk())
@@ -75,7 +75,7 @@ class MonitoringJobControllerTest {
 
     @Test
     void addJob_exceptionThrown() throws Exception {
-        when(monitoringJobOrchestrator.addJob(any(MonitoringJob.class))).thenThrow(new RuntimeException("Add job failed"));
+        when(monitoringJobService.addJob(any(MonitoringJob.class))).thenThrow(new RuntimeException("Add job failed"));
 
         mockMvc.perform(post("/jobs")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -86,7 +86,7 @@ class MonitoringJobControllerTest {
 
     @Test
     void deleteJob_exceptionThrown() throws Exception {
-        Mockito.doThrow(new RuntimeException("Delete job failed")).when(monitoringJobOrchestrator).deleteJob(any(UUID.class));
+        Mockito.doThrow(new RuntimeException("Delete job failed")).when(monitoringJobService).deleteJob(any(UUID.class));
 
         mockMvc.perform(post("/jobs/" + jobId + "/delete"))
                 .andExpect(status().isBadRequest())
@@ -95,7 +95,7 @@ class MonitoringJobControllerTest {
 
     @Test
     void triggerJob_exceptionThrown() throws Exception {
-        Mockito.doThrow(new RuntimeException("Trigger job failed")).when(monitoringJobOrchestrator).triggerJob(any(UUID.class));
+        Mockito.doThrow(new RuntimeException("Trigger job failed")).when(monitoringJobService).triggerJob(any(UUID.class));
 
         mockMvc.perform(post("/jobs/" + jobId + "/trigger"))
                 .andExpect(status().isBadRequest())

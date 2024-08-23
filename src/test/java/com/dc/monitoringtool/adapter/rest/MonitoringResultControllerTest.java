@@ -1,6 +1,6 @@
 package com.dc.monitoringtool.adapter.rest;
 
-import com.dc.monitoringtool.application.MonitoringResultOrchestrator;
+import com.dc.monitoringtool.domain.MonitoringResultService;
 import com.dc.monitoringtool.domain.model.MonitoringResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ class MonitoringResultControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private MonitoringResultOrchestrator monitoringResultOrchestrator;
+    private MonitoringResultService monitoringResultService;
 
     private MonitoringResult monitoringResult;
 
@@ -43,7 +43,7 @@ class MonitoringResultControllerTest {
 
     @Test
     void getMonitoringResultsByCriteria_allCriteria() throws Exception {
-        when(monitoringResultOrchestrator.getFilteredResults(any(LocalDateTime.class), any(LocalDateTime.class), anyString(), anyString()))
+        when(monitoringResultService.getFilteredResults(any(LocalDateTime.class), any(LocalDateTime.class), anyString(), anyString()))
                 .thenReturn(List.of(monitoringResult));
 
         mockMvc.perform(get("/monitoring-results")
@@ -57,7 +57,7 @@ class MonitoringResultControllerTest {
 
     @Test
     void getMonitoringResultsByCriteria_startTimestampOnly() throws Exception {
-        when(monitoringResultOrchestrator.getFilteredResults(any(LocalDateTime.class), eq(null), eq(null), eq(null)))
+        when(monitoringResultService.getFilteredResults(any(LocalDateTime.class), eq(null), eq(null), eq(null)))
                 .thenReturn(List.of(monitoringResult));
 
         mockMvc.perform(get("/monitoring-results")
@@ -67,7 +67,7 @@ class MonitoringResultControllerTest {
 
     @Test
     void getMonitoringResultsByCriteria_endTimestampOnly() throws Exception {
-        when(monitoringResultOrchestrator.getFilteredResults(eq(null), any(LocalDateTime.class), eq(null), eq(null)))
+        when(monitoringResultService.getFilteredResults(eq(null), any(LocalDateTime.class), eq(null), eq(null)))
                 .thenReturn(List.of(monitoringResult));
 
         mockMvc.perform(get("/monitoring-results")
@@ -77,7 +77,7 @@ class MonitoringResultControllerTest {
 
     @Test
     void getMonitoringResultsByCriteria_jobIdAndStatus() throws Exception {
-        when(monitoringResultOrchestrator.getFilteredResults(eq(null), eq(null), anyString(), anyString()))
+        when(monitoringResultService.getFilteredResults(eq(null), eq(null), anyString(), anyString()))
                 .thenReturn(List.of(monitoringResult));
 
         mockMvc.perform(get("/monitoring-results")
@@ -88,7 +88,7 @@ class MonitoringResultControllerTest {
 
     @Test
     void getMonitoringResultsByCriteria_exceptionThrown() throws Exception {
-        when(monitoringResultOrchestrator.getFilteredResults(any(LocalDateTime.class), any(LocalDateTime.class), anyString(), anyString()))
+        when(monitoringResultService.getFilteredResults(any(LocalDateTime.class), any(LocalDateTime.class), anyString(), anyString()))
                 .thenThrow(new RuntimeException("Query failed"));
 
         mockMvc.perform(get("/monitoring-results")
