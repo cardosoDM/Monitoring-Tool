@@ -2,13 +2,13 @@
 # Monitoring Tool
 
 ## Overview
-The Monitoring Tool is a Java-based application designed to monitor URLs and schedule jobs using Quartz Scheduler. It integrates with PostgreSQL and MongoDB for data persistence and uses Spring Boot for application configuration and management.
+The Monitoring Tool is a Java-based application designed to monitor URLs and schedule jobs using Quartz Scheduler. It integrates with PostgresSQL and MongoDB for data persistence and uses Spring Boot for application configuration and management.
 
 ## Features
 - URL Monitoring
 - Job Scheduling with Quartz
-- Integration with PostgreSQL and MongoDB
-- RESTful API for managing jobs
+- Integration with PostgresSQL and MongoDB
+- Restfull API for managing jobs
 - Unit and Integration Tests
 
 ## Prerequisites
@@ -85,7 +85,7 @@ and open the file `target/site/jacoco/index.html` in a browser.
 The application can be configured using the `application.properties` file located in the `src/main/resources` directory.
 
 ### Database Configuration
-The application uses PostgreSQL and MongoDB. The database configurations are managed using Testcontainers in the `AbstractContainerBase` class.
+The application uses PostgresSQL and MongoDB. The database configurations are managed using Testcontainers in the `AbstractContainerBase` class.
 
 ## Project Structure
 - `src/main/java`: Contains the main application code.
@@ -93,9 +93,14 @@ The application uses PostgreSQL and MongoDB. The database configurations are man
 - `src/main/resources`: Contains application configuration files.
 
 ## Usage
+### API Endpoints
+The Monitoring Tool provides the following API endpoints can be viewed in Swagger UI at `http://localhost:8080/swagger-ui.html`.
 
 ### Adding a Job
 To add a new monitoring job, send a POST request to `/api/jobs` with the job details.
+
+### Retrieving a Job
+To retrieve a job by ID, send a GET request to `/api/jobs/{jobId}`.
 
 ### Triggering a Job
 To trigger an existing job, send a POST request to `/api/jobs/{jobId}/trigger`.

@@ -1,6 +1,7 @@
 package com.dc.monitoringtool.adapter.rest;
 
 import com.dc.monitoringtool.domain.MonitoringJobService;
+import com.dc.monitoringtool.domain.exception.MonitoringNotFoundException;
 import com.dc.monitoringtool.domain.model.HttpRequestConfig;
 import com.dc.monitoringtool.domain.model.MonitoringJob;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -103,5 +105,44 @@ class MonitoringJobControllerTest {
         mockMvc.perform(post("/jobs/" + jobId + "/trigger"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Trigger job failed"));
+    }
+
+    @Test
+    void getJob_successful() throws Exception {
+        UUID jobId = UUID.randomUUID();
+        HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://test.com", "GET", Collections.emptyMap(), null);
+        MonitoringJob monitoringJob = MonitoringJob.builder()
+                .id(jobId)
+                .httpRequestConfig(httpRequestConfig)
+                .durationInMilliSeconds(1000)
+                .repeatCount(5)
+                .intervalInMilliSeconds(1000)
+                .build();
+
+        when(monitoringJobService.getJob(any(UUID.class))).thenReturn(monitoringJob);
+
+        mockMvc.perform(get("/jobs/" + jobId))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"id\":\"" + jobId + "\",\"httpRequestConfig\":{\"url\":\"https://test.com\",\"method\":\"GET\",\"headers\":{}},\"durationInMilliSeconds\":1000,\"repeatCount\":5,\"intervalInMilliSeconds\":1000}"));
+    }
+
+    @Test
+    void getJob_notFound() throws Exception {
+        UUID jobId = UUID.randomUUID();
+        when(monitoringJobService.getJob(any(UUID.class))).thenThrow(new MonitoringNotFoundException("Job not found"));
+
+        mockMvc.perform(get("/jobs/" + jobId))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("Job not found"));
+    }
+
+    @Test
+    void getJob_exceptionThrown() throws Exception {
+        UUID jobId = UUID.randomUUID();
+        when(monitoringJobService.getJob(any(UUID.class))).thenThrow(new RuntimeException("Get job failed"));
+
+        mockMvc.perform(get("/jobs/" + jobId))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Get job failed"));
     }
 }

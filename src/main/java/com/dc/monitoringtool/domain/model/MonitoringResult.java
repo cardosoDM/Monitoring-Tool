@@ -22,6 +22,6 @@ public record MonitoringResult(String id,
                                String status,
                                long responseTime) {
 
-    public static String SUCCESS = "SUCCESS";
-    public static String FAILURE = "FAILURE";
+    public static final String SUCCESS = "SUCCESS";
+    public static final String FAILURE = "FAILURE";
 }

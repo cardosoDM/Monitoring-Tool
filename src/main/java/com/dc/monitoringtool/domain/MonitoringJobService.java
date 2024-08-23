@@ -12,5 +12,8 @@ public interface MonitoringJobService {
 
     void deleteJob(UUID id);
 
+    //todo missing the max number of jobs
     int getNumberOfJobs();
+
+    MonitoringJob getJob(UUID id);
 }

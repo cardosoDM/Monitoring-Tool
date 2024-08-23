@@ -1,6 +1,8 @@
 package com.dc.monitoringtool.adapter.scheduler;
 
 import com.dc.monitoringtool.domain.exception.MonitoringException;
+import com.dc.monitoringtool.domain.exception.MonitoringNotFoundException;
+import com.dc.monitoringtool.domain.model.HttpRequestConfig;
 import com.dc.monitoringtool.domain.model.MonitoringJob;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,6 +14,7 @@ import org.quartz.impl.matchers.GroupMatcher;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.Set;
 import java.util.UUID;
 
@@ -191,7 +194,7 @@ class QuartzServiceTest {
 
         // When & Then
         InvocationTargetException invocationTargetException = assertThrows(InvocationTargetException.class, () -> getJobDetailsMethod.invoke(quartzService, jobId));
-        assertInstanceOf(MonitoringException.class, invocationTargetException.getCause());
+        assertInstanceOf(MonitoringNotFoundException.class, invocationTargetException.getCause());
     }
 
     @Test
@@ -204,7 +207,7 @@ class QuartzServiceTest {
 
         // When & Then
         InvocationTargetException invocationTargetException = assertThrows(InvocationTargetException.class, () -> getJobDetailsMethod.invoke(quartzService, jobId));
-        assertInstanceOf(MonitoringException.class, invocationTargetException.getCause());
+        assertInstanceOf(MonitoringNotFoundException.class, invocationTargetException.getCause());
     }
 
     @Test
@@ -221,5 +224,53 @@ class QuartzServiceTest {
 
         InvocationTargetException invocationTargetException = assertThrows(InvocationTargetException.class, () -> getJobDetailsMethod.invoke(quartzService, jobId));
         assertInstanceOf(MonitoringException.class, invocationTargetException.getCause());
+    }
+
+    @Test
+    void testGetJob_Success() throws SchedulerException {
+        // Given
+        UUID jobId = UUID.randomUUID();
+        JobDetail jobDetail = JobBuilder.newJob(genericJob.getClass()).withIdentity(jobId.toString()).build();
+        jobDetail.getJobDataMap().put("httpRequestConfig", new HttpRequestConfig("https://test.com", "GET", Collections.emptyMap(), null));
+        jobDetail.getJobDataMap().put("intervalInMilliSeconds", 1000);
+        jobDetail.getJobDataMap().put("durationInMilliSeconds", 10000);
+        jobDetail.getJobDataMap().put("repeatCount", 5);
+
+        when(scheduler.getJobDetail(JobKey.jobKey(jobId.toString()))).thenReturn(jobDetail);
+        when(scheduler.checkExists(JobKey.jobKey(jobId.toString()))).thenReturn(true);
+
+        // When
+        MonitoringJob result = quartzService.getJob(jobId);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(jobId, result.id());
+        assertEquals("https://test.com", result.httpRequestConfig().url());
+        assertEquals("GET", result.httpRequestConfig().method());
+        assertEquals(1000, result.intervalInMilliSeconds());
+        assertEquals(10000, result.durationInMilliSeconds());
+        assertEquals(5, result.repeatCount());
+    }
+
+    @Test
+    void testGetJob_JobNotFound() throws SchedulerException {
+        // Given
+        UUID jobId = UUID.randomUUID();
+        when(scheduler.checkExists(JobKey.jobKey(jobId.toString()))).thenReturn(false);
+
+        // When & Then
+        assertThrows(MonitoringNotFoundException.class, () -> quartzService.getJob(jobId));
+    }
+
+    @Test
+    void testGetJob_Exception() throws SchedulerException {
+        // Given
+        UUID jobId = UUID.randomUUID();
+
+        when(scheduler.checkExists(JobKey.jobKey(jobId.toString()))).thenReturn(true);
+        doThrow(new SchedulerException()).when(scheduler).getJobDetail(any(JobKey.class));
+
+        // When & Then
+        assertThrows(MonitoringException.class, () -> quartzService.getJob(jobId));
     }
 }

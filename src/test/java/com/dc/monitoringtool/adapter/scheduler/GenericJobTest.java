@@ -52,7 +52,7 @@ class GenericJobTest {
     @Test
     void execute_exceptionThrown() {
         JobDataMap jobDataMap = new JobDataMap();
-        HttpRequestConfig httpRequestConfig = new HttpRequestConfig("http://example.com", "GET", Collections.emptyMap(), null);
+        HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://example.com", "GET", Collections.emptyMap(), null);
         jobDataMap.put("httpRequestConfig", httpRequestConfig);
         when(jobExecutionContext.getJobDetail()).thenReturn(jobDetail);
         when(jobDetail.getJobDataMap()).thenReturn(jobDataMap);

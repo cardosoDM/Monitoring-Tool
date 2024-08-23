@@ -2,6 +2,7 @@ package com.dc.monitoringtool.adapter.scheduler;
 
 import com.dc.monitoringtool.domain.MonitoringJobService;
 import com.dc.monitoringtool.domain.exception.MonitoringException;
+import com.dc.monitoringtool.domain.exception.MonitoringNotFoundException;
 import com.dc.monitoringtool.domain.model.MonitoringJob;
 import lombok.AllArgsConstructor;
 import org.quartz.*;
@@ -62,7 +63,7 @@ class QuartzService implements MonitoringJobService {
                     .build();
 
             scheduler.scheduleJob(simpleTrigger);
-        } catch (SchedulerException e) {
+        } catch (SchedulerException | MonitoringNotFoundException e ) {
             throw new MonitoringException("Error when triggering Job", e);
         }
 
@@ -87,17 +88,23 @@ class QuartzService implements MonitoringJobService {
         }
     }
 
+    @Override
+    public MonitoringJob getJob(UUID id) {
+        //get job details
+        var jobDetail = getJobDetails(id);
+        return QuartzMapper.fromJobDetailToMonitoringJob(jobDetail);
+    }
+
     private JobDetail getJobDetails(UUID id) {
         try {
             JobKey jobKey = JobKey.jobKey(id.toString());
             if (!scheduler.checkExists(jobKey)) {
-                throw new MonitoringException("Job details dont exist");
+                throw new MonitoringNotFoundException("Job details dont exist");
             }
 
             return scheduler.getJobDetail(jobKey);
         } catch (SchedulerException e) {
             throw new MonitoringException("Error when getting Job details", e);
-
         }
     }
 

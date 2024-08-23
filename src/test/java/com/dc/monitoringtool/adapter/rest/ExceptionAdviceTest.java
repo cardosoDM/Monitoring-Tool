@@ -1,6 +1,7 @@
 package com.dc.monitoringtool.adapter.rest;
 
 import com.dc.monitoringtool.domain.exception.MonitoringException;
+import com.dc.monitoringtool.domain.exception.MonitoringNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,11 +21,13 @@ class ExceptionAdviceTest {
 
     private MonitoringException monitoringException;
     private RuntimeException runtimeException;
+    private MonitoringNotFoundException monitoringNotFoundException;
 
     @BeforeEach
     void setUp() {
         monitoringException = new MonitoringException("Monitoring error occurred");
         runtimeException = new RuntimeException("Runtime error occurred");
+        monitoringNotFoundException = new MonitoringNotFoundException("Not found");
     }
 
     @Test
@@ -43,5 +46,14 @@ class ExceptionAdviceTest {
         assertNotNull(response);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertEquals("Runtime error occurred", response.getBody());
+    }
+
+    @Test
+    void handleMonitoringNotFoundException() {
+        ResponseEntity<String> response = exceptionAdvice.handleMonitoringNotFoundException(monitoringNotFoundException);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals("Not found", response.getBody());
     }
 }
