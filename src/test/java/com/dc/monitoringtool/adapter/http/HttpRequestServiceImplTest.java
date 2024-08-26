@@ -14,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-
 @ExtendWith(MockitoExtension.class)
 public class HttpRequestServiceImplTest {
 
@@ -25,7 +24,7 @@ public class HttpRequestServiceImplTest {
     private HttpRequestServiceImpl httpRequestService;
 
     @Test
-    public void testExecuteRequest() {
+    public void givenValidRequestWhenExecuteRequestThenReturnResponseEntity() {
         String url = "https://example.com";
         HttpMethod method = HttpMethod.GET;
         Object requestBody = null;

@@ -41,7 +41,7 @@ class MonitoringJobControllerTest {
     }
 
     @Test
-    void addJob_successful() throws Exception {
+    void givenValidJobWhenAddJobThenReturnSuccessful() throws Exception {
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://test.com", "GET", Collections.emptyMap(), null);
         final MonitoringJob monitoringJob = MonitoringJob.builder()
                 .id(jobId)
@@ -61,7 +61,7 @@ class MonitoringJobControllerTest {
     }
 
     @Test
-    void deleteJob_successful() throws Exception {
+    void givenValidJobIdWhenDeleteJobThenReturnSuccessful() throws Exception {
         doNothing().when(monitoringJobService).deleteJob(any(UUID.class));
 
         mockMvc.perform(post("/jobs/" + jobId + "/delete"))
@@ -70,7 +70,7 @@ class MonitoringJobControllerTest {
     }
 
     @Test
-    void triggerJob_successful() throws Exception {
+    void givenValidJobIdWhenTriggerJobThenReturnSuccessful() throws Exception {
         doNothing().when(monitoringJobService).triggerJob(any(UUID.class));
 
         mockMvc.perform(post("/jobs/" + jobId + "/trigger"))
@@ -79,7 +79,7 @@ class MonitoringJobControllerTest {
     }
 
     @Test
-    void addJob_exceptionThrown() throws Exception {
+    void givenExceptionWhenAddJobThenReturnBadRequest() throws Exception {
         when(monitoringJobService.addJob(any(MonitoringJob.class))).thenThrow(new RuntimeException("Add job failed"));
 
         mockMvc.perform(post("/jobs")
@@ -90,7 +90,7 @@ class MonitoringJobControllerTest {
     }
 
     @Test
-    void deleteJob_exceptionThrown() throws Exception {
+    void givenExceptionWhenDeleteJobThenReturnBadRequest() throws Exception {
         Mockito.doThrow(new RuntimeException("Delete job failed")).when(monitoringJobService).deleteJob(any(UUID.class));
 
         mockMvc.perform(post("/jobs/" + jobId + "/delete"))
@@ -99,7 +99,7 @@ class MonitoringJobControllerTest {
     }
 
     @Test
-    void triggerJob_exceptionThrown() throws Exception {
+    void givenExceptionWhenTriggerJobThenReturnBadRequest() throws Exception {
         Mockito.doThrow(new RuntimeException("Trigger job failed")).when(monitoringJobService).triggerJob(any(UUID.class));
 
         mockMvc.perform(post("/jobs/" + jobId + "/trigger"))
@@ -108,7 +108,7 @@ class MonitoringJobControllerTest {
     }
 
     @Test
-    void getJob_successful() throws Exception {
+    void givenValidJobIdWhenGetJobThenReturnSuccessful() throws Exception {
         UUID jobId = UUID.randomUUID();
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://test.com", "GET", Collections.emptyMap(), null);
         MonitoringJob monitoringJob = MonitoringJob.builder()
@@ -127,7 +127,7 @@ class MonitoringJobControllerTest {
     }
 
     @Test
-    void getJob_notFound() throws Exception {
+    void givenJobNotFoundWhenGetJobThenReturnNotFound() throws Exception {
         UUID jobId = UUID.randomUUID();
         when(monitoringJobService.getJob(any(UUID.class))).thenThrow(new MonitoringNotFoundException("Job not found"));
 
@@ -137,7 +137,7 @@ class MonitoringJobControllerTest {
     }
 
     @Test
-    void getJob_exceptionThrown() throws Exception {
+    void givenExceptionWhenGetJobThenReturnBadRequest() throws Exception {
         UUID jobId = UUID.randomUUID();
         when(monitoringJobService.getJob(any(UUID.class))).thenThrow(new RuntimeException("Get job failed"));
 

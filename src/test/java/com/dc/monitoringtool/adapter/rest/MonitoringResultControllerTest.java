@@ -42,7 +42,7 @@ class MonitoringResultControllerTest {
     }
 
     @Test
-    void getMonitoringResultsByCriteria_allCriteria() throws Exception {
+    void givenAllCriteriaWhenGetMonitoringResultsByCriteriaThenReturnResults() throws Exception {
         when(monitoringResultService.getFilteredResults(any(LocalDateTime.class), any(LocalDateTime.class), anyString(), anyString()))
                 .thenReturn(List.of(monitoringResult));
 
@@ -56,7 +56,7 @@ class MonitoringResultControllerTest {
     }
 
     @Test
-    void getMonitoringResultsByCriteria_startTimestampOnly() throws Exception {
+    void givenStartTimestampOnlyWhenGetMonitoringResultsByCriteriaThenReturnBadRequest() throws Exception {
         when(monitoringResultService.getFilteredResults(any(LocalDateTime.class), eq(null), eq(null), eq(null)))
                 .thenReturn(List.of(monitoringResult));
 
@@ -66,7 +66,7 @@ class MonitoringResultControllerTest {
     }
 
     @Test
-    void getMonitoringResultsByCriteria_endTimestampOnly() throws Exception {
+    void givenEndTimestampOnlyWhenGetMonitoringResultsByCriteriaThenReturnBadRequest() throws Exception {
         when(monitoringResultService.getFilteredResults(eq(null), any(LocalDateTime.class), eq(null), eq(null)))
                 .thenReturn(List.of(monitoringResult));
 
@@ -76,7 +76,7 @@ class MonitoringResultControllerTest {
     }
 
     @Test
-    void getMonitoringResultsByCriteria_jobIdAndStatus() throws Exception {
+    void givenJobIdAndStatusWhenGetMonitoringResultsByCriteriaThenReturnBadRequest() throws Exception {
         when(monitoringResultService.getFilteredResults(eq(null), eq(null), anyString(), anyString()))
                 .thenReturn(List.of(monitoringResult));
 
@@ -87,7 +87,7 @@ class MonitoringResultControllerTest {
     }
 
     @Test
-    void getMonitoringResultsByCriteria_exceptionThrown() throws Exception {
+    void givenExceptionWhenGetMonitoringResultsByCriteriaThenReturnBadRequest() throws Exception {
         when(monitoringResultService.getFilteredResults(any(LocalDateTime.class), any(LocalDateTime.class), anyString(), anyString()))
                 .thenThrow(new RuntimeException("Query failed"));
 

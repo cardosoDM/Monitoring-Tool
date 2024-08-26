@@ -48,7 +48,7 @@ class MonitoringResultRepositoryImplTest extends AbstractContainerBase {
     }
 
     @Test
-    void findByFilters_allFilters() {
+    void givenAllFiltersWhenFindByFiltersThenReturnResults() {
         LocalDateTime startTimestamp = LocalDateTime.now().minusDays(1);
         LocalDateTime endTimestamp = LocalDateTime.now();
         String jobId = "testJobId";

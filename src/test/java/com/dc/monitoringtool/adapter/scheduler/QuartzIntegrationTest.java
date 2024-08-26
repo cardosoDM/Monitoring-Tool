@@ -49,7 +49,7 @@ class QuartzIntegrationTest extends AbstractContainerBase {
     }
 
     @Test
-    void addJob_triggerJob_successful() throws InterruptedException {
+    void givenJobWhenTriggerThenSuccessful() throws InterruptedException {
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://example.com", "GET", Collections.emptyMap(), null);
         MonitoringJob job = new MonitoringJob(UUID.randomUUID(), httpRequestConfig, 1000, 5, 60000);
         MonitoringJob monitoringJob = monitoringJobService.addJob(job);

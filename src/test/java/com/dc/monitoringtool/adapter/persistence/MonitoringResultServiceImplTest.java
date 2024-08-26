@@ -1,4 +1,3 @@
-// src/test/java/com/dc/monitoringtool/adapter/persistence/MonitoringResultPersistenceServiceImplTest.java
 package com.dc.monitoringtool.adapter.persistence;
 
 import com.dc.monitoringtool.domain.model.MonitoringResult;
@@ -49,7 +48,7 @@ class MonitoringResultServiceImplTest {
     }
 
     @Test
-    void getFilteredResults_successful() {
+    void givenValidFiltersWhenGetFilteredResultsThenReturnResults() {
         LocalDateTime startTimestamp = LocalDateTime.now().minusDays(1);
         LocalDateTime endTimestamp = LocalDateTime.now();
         String jobId = "testJobId";
@@ -66,7 +65,7 @@ class MonitoringResultServiceImplTest {
     }
 
     @Test
-    void saveMonitoringResult_successful() {
+    void givenValidMonitoringResultWhenSaveMonitoringResultThenReturnSavedResult() {
         when(monitoringResultRepository.save(any(MonitoringResultEntity.class)))
                 .thenReturn(monitoringResultEntity);
 
@@ -77,7 +76,7 @@ class MonitoringResultServiceImplTest {
     }
 
     @Test
-    void saveMonitoringResult_exceptionThrown() {
+    void givenSaveFailureWhenSaveMonitoringResultThenThrowException() {
         when(monitoringResultRepository.save(any(MonitoringResultEntity.class)))
                 .thenThrow(new RuntimeException("Save failed"));
 

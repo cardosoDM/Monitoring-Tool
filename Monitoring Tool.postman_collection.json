@@ -1,0 +1,121 @@
+{
+	"info": {
+		"_postman_id": "760a5de1-65c5-4b3c-8cf4-1ba9cceaf74e",
+		"name": "Monitoring Tool",
+		"description": "b1db6cf0-7ca1-408d-a171-caec3af40228",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13172883"
+	},
+	"item": [
+		{
+			"name": "Add Job",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"httpRequestConfig\": {\n    \"url\": \"https://jsonplaceholder.typicode.com/posts\",\n    \"method\": \"POST\",\n    \"headers\": {},\n    \"body\": {\n    \"title\": \"foo\",\n    \"body\": \"bar\",\n    \"userId\": 1,\n  }\n  },\n  \"intervalInMilliSeconds\": 1000,\n  \"durationInMilliSeconds\": 1000,\n  \"repeatCount\": 5\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/jobs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"jobs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Trigger Job",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/jobs/:id/trigger",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"jobs",
+						":id",
+						"trigger"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "ed8d122d-5012-45ca-bb06-add2aa926d13"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Results",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/monitoring-results?startTimestamp=2024-08-22T06:20:01.850&endTimestamp=2024-08-23T06:20:05.850",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"monitoring-results"
+					],
+					"query": [
+						{
+							"key": "startTimestamp",
+							"value": "2024-08-22T06:20:01.850"
+						},
+						{
+							"key": "endTimestamp",
+							"value": "2024-08-23T06:20:05.850"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Job",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/jobs/:id",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"jobs",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "108ec846-c008-4742-99aa-41c94f1f4e7a"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

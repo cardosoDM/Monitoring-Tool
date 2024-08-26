@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MonitorResultEntityMapperTest {
 
     @Test
-    void mapToDomain_validEntity() {
+    void givenValidEntityWhenMapToDomainThenReturnDomain() {
         MonitoringResultEntity entity = MonitoringResultEntity.builder()
                 .id("1")
                 .timestamp(LocalDateTime.now())
@@ -31,12 +31,12 @@ class MonitorResultEntityMapperTest {
     }
 
     @Test
-    void mapToDomain_nullEntity() {
+    void givenNullEntityWhenMapToDomainThenReturnNull() {
         assertNull(MonitorResultEntityMapper.mapToDomain(null));
     }
 
     @Test
-    void mapToEntity_validDomain() {
+    void givenValidDomainWhenMapToEntityThenReturnEntity() {
         MonitoringResult domain = MonitoringResult.builder()
                 .id("1")
                 .timestamp(LocalDateTime.now())
@@ -56,7 +56,7 @@ class MonitorResultEntityMapperTest {
     }
 
     @Test
-    void mapToEntity_nullDomain() {
+    void givenNullDomainWhenMapToEntityThenReturnNull() {
         assertNull(MonitorResultEntityMapper.mapToEntity(null));
     }
 }

@@ -31,7 +31,7 @@ class ExceptionAdviceTest {
     }
 
     @Test
-    void handleMonitoringException() {
+    void givenMonitoringExceptionWhenHandleExceptionThenReturnBadRequest() {
         ResponseEntity<String> response = exceptionAdvice.handleMonitoringException(monitoringException);
 
         assertNotNull(response);
@@ -40,7 +40,7 @@ class ExceptionAdviceTest {
     }
 
     @Test
-    void handleRuntimeException() {
+    void givenRuntimeExceptionWhenHandleExceptionThenReturnBadRequest() {
         ResponseEntity<String> response = exceptionAdvice.handleMonitoringException(runtimeException);
 
         assertNotNull(response);
@@ -49,7 +49,7 @@ class ExceptionAdviceTest {
     }
 
     @Test
-    void handleMonitoringNotFoundException() {
+    void givenMonitoringNotFoundExceptionWhenHandleExceptionThenReturnNotFound() {
         ResponseEntity<String> response = exceptionAdvice.handleMonitoringNotFoundException(monitoringNotFoundException);
 
         assertNotNull(response);

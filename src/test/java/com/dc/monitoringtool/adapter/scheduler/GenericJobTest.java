@@ -36,7 +36,7 @@ class GenericJobTest {
     }
 
     @Test
-    void execute_successful() {
+    void givenJobContextWhenExecuteThenSuccessful() {
         JobDataMap jobDataMap = new JobDataMap();
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://example.com", "GET", Collections.emptyMap(), null);
         jobDataMap.put("httpRequestConfig", httpRequestConfig);
@@ -50,7 +50,7 @@ class GenericJobTest {
     }
 
     @Test
-    void execute_exceptionThrown() {
+    void givenJobContextWhenExecuteThenExceptionThrown() {
         JobDataMap jobDataMap = new JobDataMap();
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://example.com", "GET", Collections.emptyMap(), null);
         jobDataMap.put("httpRequestConfig", httpRequestConfig);
@@ -69,7 +69,7 @@ class GenericJobTest {
     }
 
     @Test
-    void execute_withInvalidJobData_shouldInterrupt() throws SchedulerException {
+    void givenInvalidJobDataWhenExecuteThenShouldInterrupt() throws SchedulerException {
         JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put("invalidKey", "invalidValue");
         when(jobExecutionContext.getJobDetail()).thenReturn(jobDetail);
@@ -85,7 +85,7 @@ class GenericJobTest {
     }
 
     @Test
-    void interrupt_successful() {
+    void givenGenericJobWhenInterruptThenSuccessful() {
         genericJob.interrupt();
 
         verify(monitoringJobOrchestrator, times(0))

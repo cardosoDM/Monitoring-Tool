@@ -32,7 +32,7 @@ class MonitoringJobOrchestratorTest {
     }
 
     @Test
-    void execute_successful() {
+    void givenJobIdAndHttpRequestConfigWhenExecuteThenSuccessful() {
         String jobId = "jobId";
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://example.com", "GET", Collections.emptyMap(), null);
         var request = mock(MonitoringResult.class);

@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 class QuartzMapperTest {
 
     @Test
-    void fromMonitoringJobToJobDetail_successful() {
+    void givenMonitoringJobWhenMapToJobDetailThenSuccessful() {
         // Arrange
         UUID jobId = UUID.randomUUID();
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://example.com", "GET", Collections.emptyMap(), null);
@@ -25,7 +25,7 @@ class QuartzMapperTest {
 
         GenericJob genericJob = mock(GenericJob.class);
 
-        MonitoringJob monitoringJob = new MonitoringJob(jobId, httpRequestConfig, intervalInMilliSeconds, durationInMilliSeconds,repeatCount);
+        MonitoringJob monitoringJob = new MonitoringJob(jobId, httpRequestConfig, intervalInMilliSeconds, durationInMilliSeconds, repeatCount);
 
         // Act
         JobDetail jobDetail = QuartzMapper.fromMonitoringJobToJobDetail(monitoringJob, genericJob.getClass());

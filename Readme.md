@@ -31,17 +31,6 @@ Use the Maven Wrapper to build the project:
 mvn clean install
 ```
 
-### Run the Application
-First, you need to run the docker-compose file to start the databases
-```sh
-docker-compose up
-```
-Then, you can run the application using the Spring Boot Maven plugin:
-```sh
-mvn spring-boot:run
-```
-The application will start on port 8080.
-
 ### Run the Application with Docker
 Build the Docker image:
 ```sh
@@ -53,6 +42,44 @@ Then run the image with docker-compose in the build folder:
 docker-compose -f build/docker-compose.yaml  up 
 ```
 
+The application will start on port 8080.
+
+## Usage
+### API Endpoints
+The Monitoring Tool provides the following API endpoints can be viewed in Swagger UI at http://localhost:8080/swagger-ui.html.
+
+Can also be imported to postman from this file Monitoring Tool.postman_collection.json
+
+### Adding a Job
+To add a new monitoring job, send a POST request to `/api/jobs` with the job details.
+
+### Retrieving a Job
+To retrieve a job by ID, send a GET request to `/api/jobs/{jobId}`.
+
+### Triggering a Job
+To trigger an existing job, send a POST request to `/api/jobs/{jobId}/trigger`.
+
+### Deleting a Job
+To delete a job, send a DELETE request to `/api/jobs/{jobId}`.
+
+### Retrieving Monitoring Results
+To retrieve monitoring results based on criteria, send a GET request to `/monitoring-results` with the following query parameters:
+- `startTimestamp`: The start timestamp for filtering results (required).
+- `endTimestamp`: The end timestamp for filtering results (required).
+- `jobId`: The job ID for filtering results (optional).
+- `status`: The status for filtering results (optional).
+
+
+
+### Run the Application (Spring Boot)  
+First, you need to run the docker-compose file to start the databases
+```sh
+docker-compose up
+```
+Then, you can run the application using the Spring Boot Maven plugin:
+```sh
+mvn spring-boot:run
+```
 The application will start on port 8080.
 
 Stop the application using:
@@ -76,25 +103,3 @@ mvn jacoco:report
 ```
 and open the file `target/site/jacoco/index.html` in a browser.
 
-## Usage
-### API Endpoints
-The Monitoring Tool provides the following API endpoints can be viewed in Swagger UI at `http://localhost:8080/swagger-ui.html`.
-
-### Adding a Job
-To add a new monitoring job, send a POST request to `/api/jobs` with the job details.
-
-### Retrieving a Job
-To retrieve a job by ID, send a GET request to `/api/jobs/{jobId}`.
-
-### Triggering a Job
-To trigger an existing job, send a POST request to `/api/jobs/{jobId}/trigger`.
-
-### Deleting a Job
-To delete a job, send a DELETE request to `/api/jobs/{jobId}`.
-
-### Retrieving Monitoring Results
-To retrieve monitoring results based on criteria, send a GET request to `/monitoring-results` with the following query parameters:
-- `startTimestamp`: The start timestamp for filtering results (required).
-- `endTimestamp`: The end timestamp for filtering results (required).
-- `jobId`: The job ID for filtering results (optional).
-- `status`: The status for filtering results (optional).

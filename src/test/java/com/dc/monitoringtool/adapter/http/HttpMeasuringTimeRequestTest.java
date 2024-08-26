@@ -30,7 +30,7 @@ class HttpMeasuringTimeRequestTest {
     private final Object requestBody = null;
 
     @Test
-    void request_successful() {
+    void givenValidRequestConfigWhenRequestThenReturnSuccessfulResult() {
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig(url, method.name(), Collections.emptyMap(), requestBody);
         when(httpRequestService.executeRequest(method, url, requestBody, Object.class))
                 .thenReturn(ResponseEntity.ok("response"));
@@ -46,7 +46,7 @@ class HttpMeasuringTimeRequestTest {
     }
 
     @Test
-    void request_invalidJobId() {
+    void givenInvalidJobIdWhenRequestThenThrowIllegalArgumentException() {
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig(url, method.name(), Collections.emptyMap(), requestBody);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> httpMeasuringTimeRequest.request("", httpRequestConfig));
@@ -55,7 +55,7 @@ class HttpMeasuringTimeRequestTest {
     }
 
     @Test
-    void request_exceptionThrown() {
+    void givenRequestFailureWhenRequestThenReturnFailureResult() {
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig(url, method.name(), Collections.emptyMap(), requestBody);
         when(httpRequestService.executeRequest(method, url, requestBody, Object.class))
                 .thenThrow(new RuntimeException("Request failed"));
@@ -71,7 +71,7 @@ class HttpMeasuringTimeRequestTest {
     }
 
     @Test
-    void request_nullUrl() {
+    void givenNullUrlWhenRequestThenThrowIllegalArgumentException() {
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig(null, method.name(), Collections.emptyMap(), requestBody);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> httpMeasuringTimeRequest.request(jobId, httpRequestConfig));
@@ -80,7 +80,7 @@ class HttpMeasuringTimeRequestTest {
     }
 
     @Test
-    void request_emptyUrl() {
+    void givenEmptyUrlWhenRequestThenThrowIllegalArgumentException() {
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig("", method.name(), Collections.emptyMap(), requestBody);
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> httpMeasuringTimeRequest.request(jobId, httpRequestConfig));
