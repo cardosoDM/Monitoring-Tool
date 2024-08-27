@@ -16,7 +16,6 @@ class QuartzMapperTest {
 
     @Test
     void givenMonitoringJobWhenMapToJobDetailThenSuccessful() {
-        // Arrange
         UUID jobId = UUID.randomUUID();
         HttpRequestConfig httpRequestConfig = new HttpRequestConfig("https://example.com", "GET", Collections.emptyMap(), null);
         int intervalInMilliSeconds = 1000;
@@ -27,10 +26,8 @@ class QuartzMapperTest {
 
         MonitoringJob monitoringJob = new MonitoringJob(jobId, httpRequestConfig, intervalInMilliSeconds, durationInMilliSeconds, repeatCount);
 
-        // Act
         JobDetail jobDetail = QuartzMapper.fromMonitoringJobToJobDetail(monitoringJob, genericJob.getClass());
 
-        // Assert
         assertNotNull(jobDetail);
         assertEquals(jobId.toString(), jobDetail.getKey().getName());
         assertEquals(httpRequestConfig, jobDetail.getJobDataMap().get(QuartzMapper.HTTP_REQUEST_CONFIG));

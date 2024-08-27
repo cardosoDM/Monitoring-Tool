@@ -103,3 +103,14 @@ mvn jacoco:report
 ```
 and open the file `target/site/jacoco/index.html` in a browser.
 
+### TODO
+- Add more integration tests
+- Get number of jobs done in the domain layer
+
+### Future Improvements
+- Add more validation for the API endpoints
+- Add more logging
+- Add more documentation (e.g., Javadoc)
+- Add more monitoring features (e.g., monitoring CPU and memory usage)
+- Add more security features (e.g., authentication and authorization)
+
