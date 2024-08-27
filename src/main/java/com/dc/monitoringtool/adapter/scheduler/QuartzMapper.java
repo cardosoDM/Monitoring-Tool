@@ -32,7 +32,6 @@ class QuartzMapper {
                 .build();
     }
 
-    //generate one from JobDetail to MonitoringJob
     public static MonitoringJob fromJobDetailToMonitoringJob(JobDetail jobDetail) {
         return MonitoringJob.builder()
                 .id(UUID.fromString(jobDetail.getKey().getName()))

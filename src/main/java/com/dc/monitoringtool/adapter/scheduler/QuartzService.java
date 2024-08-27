@@ -22,6 +22,10 @@ class QuartzService implements MonitoringJobService {
     @Override
     public MonitoringJob addJob(MonitoringJob job) {
         try {
+            if (getNumberOfJobs() > 5) {
+                throw new MonitoringException("Number of jobs exceeded");
+            }
+
             UUID uuid = UUID.randomUUID();
             var newJob = job.toBuilder()
                     .id(uuid)
